@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  embulk:
+    container_name: embulk
+    build: . 
+    volumes:
+      - ./output_file:/embulk/output_file
+      - ./input_file:/embulk/input_file
+      - ./:/embulk/
+    tty: true

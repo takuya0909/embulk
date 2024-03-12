@@ -1,0 +1,57 @@
+in:
+  type: file
+  path_prefix: ./input_file/
+  parser:
+    charset: UTF-8
+    newline: CRLF
+    type: csv
+    delimiter: ','
+    quote: '"'
+    escape: '"'
+    trim_if_not_quoted: false
+    skip_header_lines: 1
+    allow_extra_columns: false
+    allow_optional_columns: false
+    columns:
+      - {name: column3, type: long}
+      - {name: column1, type: string}
+      - {name: column2, type: string}
+      # Add more columns as needed
+
+filters:
+  - type: column
+    columns:
+      - {name: column1, default: "foo3"}
+      - {name: column2, default: "foo2"}
+      - {name: column3, default: 10}
+  - type: eval
+    eval_columns:
+      - column3: value * 2
+      - column1: value.gsub("Green Tea", "eval")
+  - type: concat
+    name: datetime
+    delimiter: ""
+    columns:
+    - {name: column1}
+    - {name: column2}
+  - type: remove_columns
+    remove: ["column1"]
+
+
+out:
+  type: file
+  path_prefix: ./output_file/
+  sequence_format: "teas."
+  file_ext: csv
+  formatter:
+    type: csv
+    delimiter: ","
+    newline: CRLF
+    newline_in_field: LF
+    charset: UTF-8
+    quote_policy: MINIMAL
+    quote: '"'
+    escape: "\\"
+    null_string: "\\N"
+    default_timezone: "Asia/Tokyo"
+    header_line: true
